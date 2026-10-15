@@ -162,9 +162,9 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
     correctToPTBR(text) {
         let corrected = text;
 
-        // Substituições de frases inteiras (mais específicas primeiro)
+        // Substituições ordenadas por tamanho (maiores primeiro) para evitar corromper palavras
         const phraseCorrections = [
-            // Frases completas
+            // Frases completas (mais específicas primeiro)
             ['Para te ajudar melhor, podes:', 'Para ajudar melhor, você pode:'],
             ['Quanto mais detalhes deres', 'Quanto mais detalhes você der'],
             ['deres, mais personalizada', 'você der, mais personalizada'],
