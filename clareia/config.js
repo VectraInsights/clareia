@@ -2,24 +2,29 @@
 // CLAREIA — Configuração de API
 // ------------------------------------------------------------
 // INSTRUÇÕES:
-// 1. Cola as tuas chaves nos espaços indicados abaixo
-// 2. Guarda este ficheiro
-// 3. Nunca partilhas este ficheiro publicamente!
+// 1. Cria um ficheiro chamado "config.local.js" na mesma pasta
+// 2. Cola as tuas chaves nesse ficheiro (ver exemplo abaixo)
+// 3. O config.local.js está no .gitignore, nunca é publicado
 //
-// A chave NÃO é guardada nos outros ficheiros do projeto.
+// Exemplo de config.local.js:
+// ------------------------------------------------------------
+// window.CLAREIA_CONFIG_LOCAL = {
+//     GROQ_API_KEY: 'gsk_...',
+//     GEMINI_API_KEY: 'AIza...',
+//     ACTIVE_API: 'groq'
+// };
+// ------------------------------------------------------------
 // ============================================================
 
 window.CLAREIA_CONFIG = {
-    // GROQ — https://console.groq.com/keys
-    GROQ_API_KEY: 'COLE_SUA_CHAVE_GROQ_AQUI',
-
-    // GEMINI — https://aistudio.google.com/app/apikey
-    GEMINI_API_KEY: 'COLE_SUA_CHAVE_GEMINI_AQUI',
-
-    // Modelos disponíveis
+    GROQ_API_KEY: '',
+    GEMINI_API_KEY: '',
     GROQ_MODEL: 'llama-3.3-70b-versatile',
     GEMINI_MODEL: 'gemini-2.0-flash',
-
-    // API ativa: 'groq' ou 'gemini'
     ACTIVE_API: 'groq'
 };
+
+// Se existir config.local.js, sobrescreve com as configurações locais
+if (window.CLAREIA_CONFIG_LOCAL) {
+    Object.assign(window.CLAREIA_CONFIG, window.CLAREIA_CONFIG_LOCAL);
+}
