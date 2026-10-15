@@ -30,7 +30,7 @@ O Clareia é um tutor universitário baseado em inteligência artificial que aju
 ## 🚀 Como Executar
 
 ### Opção 1 — Simples (recomendado para teste)
-Abre o ficheiro `index.html` no browser.
+Abra o arquivo `index.html` no navegador.
 
 ### Opção 2 — Servidor local
 ```bash
@@ -45,12 +45,12 @@ python -m http.server 3000
 ## ⚙️ Configuração da API
 
 1. Abre `config.js`
-2. Cola as tuas chaves nos espaços indicados:
+2. Cole as suas chaves nos espaços indicados:
    - **Groq**: https://console.groq.com/keys
    - **Gemini**: https://aistudio.google.com/app/apikey
 3. Escolhe a API ativa (`groq` ou `gemini`)
 
-> ⚠️ **Nunca partilhes o ficheiro `config.js` publicamente!**
+> ⚠️ **Nunca compartilhe o arquivo `config.js` publicamente!**
 
 ---
 
@@ -65,7 +65,7 @@ clareia/
 ├── api-test.html   # Teste de ligação às APIs
 ├── api-test.js     # Script de teste
 ├── GEMINI_API.md   # Documentação integração Gemini
-└── README.md       # Este ficheiro
+└── README.md       # Este arquivo
 ```
 
 ---
@@ -97,7 +97,7 @@ Derivadas | Fotossíntese | Lei de Ohm | Oferta & Demanda | Limites | Matrizes |
 - [x] Interface web completa
 - [x] Integração com Groq e Gemini
 - [x] Sistema de níveis e modos
-- [x] Upload de ficheiros
+- [x] Upload de arquivos
 - [x] Gerador de exercícios
 
 ### Fase 2 — Melhorias

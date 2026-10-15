@@ -7,7 +7,7 @@ if (!fs.existsSync(distDir)) {
     fs.mkdirSync(distDir, { recursive: true });
 }
 
-// Copia todos os ficheiros estáticos
+// Copia todos os arquivos estáticos
 const staticFiles = ['index.html', 'styles.css', 'app.js'];
 staticFiles.forEach(file => {
     fs.copyFileSync(

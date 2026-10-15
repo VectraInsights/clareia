@@ -268,7 +268,7 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
             'quimica': 'Conte os átomos de cada lado. A equação tem de estar equilibrada.',
             'fisica': 'Identifica as forças envolvidas e aplica as leis de Newton.',
             'biologia': 'Pense na função: para que serve essa estrutura ou processo?',
-            'filosofia': 'Questione os pressupostos. O que está a ser dado como garantido?'
+            'filosofia': 'Questione os pressupostos. O que está sendo dado como garantido?'
         };
         return hints[topic] || 'Leia o enunciado com atenção e identifica os dados fornecidos.';
     },
@@ -276,7 +276,7 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
     knowledgeBase: {
         'derivada': {
             simple: 'Uma derivada mede a **taxa de variação** de algo. Pense num carro: o velocímetro mostra a velocidade instantânea — isso é a derivada da posição em relação ao tempo.',
-            analogy: 'A derivada é como o velocímetro do teu carro. O velocímetro não diz onde estás (isso é a função), mas sim a que velocidade estás a mudar de posição (isso é a derivada).',
+            analogy: 'A derivada é como o velocímetro do seu carro. O velocímetro não diz onde está (isso é a função), mas sim a que velocidade está mudando de posição (isso é a derivada).',
             advanced: 'A derivada de uma função f(x) em um ponto x=a é definida como o limite: f\'(a) = lim(h→0) [f(a+h) - f(a)] / h. Geometricamente, representa a inclinação da reta tangente ao gráfico nesse ponto.',
             examples: ['Se f(x) = x², então f\'(x) = 2x. Em x=3, a taxa de variação é 6.', 'Se s(t) = 4t² + 2t (posição), então v(t) = s\'(t) = 8t + 2 (velocidade)']
         },
@@ -290,7 +290,7 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
             simple: 'A Lei de Ohm diz que a **tensão** é igual à **corrente** multiplicada pela **resistência**: V = R × I.',
             analogy: 'Pense num tubo de água: a tensão é a pressão da água, a corrente é a quantidade de água que passa, e a resistência é o estreitamento do tubo.',
             advanced: 'A Lei de Ohm V = R × I é válida para resistores ômicos. Em circuitos CA, generaliza-se como V = Z × I, onde Z é a impedância complexa. A potência dissipada é P = V × I = I² × R = V²/R.',
-            examples: ['Se tens uma bateria de 9V e um resistor de 3Ω, a corrente é I = V/R = 9/3 = 3A.']
+            examples: ['Se tem uma bateria de 9V e um resistor de 3Ω, a corrente é I = V/R = 9/3 = 3A.']
         },
         'oferta e demanda': {
             simple: 'Oferta é o que os vendedores querem vender. Demanda é o que os compradores querem comprar. O **preço** encontra-se quando os dois se equilibram.',
@@ -325,7 +325,7 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
             { q: 'Se f(x) = e^x, qual é f\'(x)?', a: 'f\'(x) = e^x' }
         ],
         'fotossintese': [
-            { q: 'Escreve a equação geral da fotossíntese.', a: '6CO₂ + 6H₂O + luz → C₆H₁₂O₆ + 6O₂' },
+            { q: 'Escreva a equação geral da fotossíntese.', a: '6CO₂ + 6H₂O + luz → C₆H₁₂O₆ + 6O₂' },
             { q: 'Em que organelo celular ocorre a fotossíntese?', a: 'Nos cloroplastos.' }
         ],
         'lei de ohm': [

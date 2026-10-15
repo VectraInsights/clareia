@@ -10,7 +10,7 @@ O Clareia utiliza a **Google Gemini API** (via Google AI Studio) para gerar resp
 
 1. Acede a [Google AI Studio](https://aistudio.google.com/app/apikey)
 2. Cria um projeto (ou usa um existente)
-3. Clica em **"Create API Key"**
+3. Clique em **"Create API Key"**
 4. Copia a chave (começa com `AIza...`)
 
 ---
@@ -19,7 +19,7 @@ O Clareia utiliza a **Google Gemini API** (via Google AI Studio) para gerar resp
 
 ### 1. Preencher `config.js`
 
-Abre `clareia/config.js` e cola a tua chave:
+Abra `clareia/config.js` e cole a sua chave:
 
 ```javascript
 window.CLAREIA_CONFIG = {
@@ -160,9 +160,9 @@ curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:g
 ## 🔧 Resolução de Problemas
 
 ### Erro 400: API key not valid
-- Verifica se a chave está correta
-- Confirma se o projeto no AI Studio está ativo
-- Verifica se a API "Generative Language API" está ativada no Google Cloud
+- Verifique se a chave está correta
+- Confirme se o projeto no AI Studio está ativo
+- Verifique se a API "Generative Language API" está ativada no Google Cloud
 
 ### Erro 429: Rate limit
 - Espera alguns segundos
@@ -191,7 +191,7 @@ curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:g
 
 ⚠️ **IMPORTANTE:**
 
-1. **Nunca partilhes a tua chave publicamente**
+1. **Nunca compartilhe a sua chave publicamente**
 2. **Nunca faças commit do `config.js` para repositórios públicos**
 3. Em produção, usa um **backend proxy** para esconder a chave
 4. Para o Clareia (projeto educativo), a chave no browser é aceitável
