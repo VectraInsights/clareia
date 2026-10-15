@@ -164,16 +164,17 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
 
         // Substituições de frases inteiras (mais específicas primeiro)
         const phraseCorrections = [
+            // Frases completas
             ['Para te ajudar melhor, podes:', 'Para ajudar melhor, você pode:'],
-            ['Para te ajudar', 'Para ajudar'],
-            ['para te ajudar', 'para ajudar'],
-            ['ajudar-te', 'ajudar você'],
             ['Quanto mais detalhes deres', 'Quanto mais detalhes você der'],
             ['deres, mais personalizada', 'você der, mais personalizada'],
+            ['Para te ajudar', 'Para ajudar'],
+            ['para te ajudar', 'para ajudar'],
             ['Compreendeste?', 'Compreendeu?'],
             ['compreendeste', 'compreendeu'],
             ['praticares', 'praticar'],
             ['Nunca partilhes', 'Nunca compartilhe'],
+            ['ajudar-te', 'ajudar você'],
             ['não és', 'não é'],
             ['não estás', 'não está'],
             ['já sabes', 'já sabe'],
@@ -182,9 +183,6 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
             ['se podes', 'se pode'],
             ['se fazes', 'se faz'],
             ['se dás', 'se dá'],
-            ['estás', 'está'],
-            ['és', 'é'],
-            ['tens', 'tem'],
             ['gostarias', 'gostaria'],
             ['queres', 'quer'],
             ['fazes', 'faz'],
@@ -192,6 +190,9 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
             ['podes', 'pode'],
             ['sabes', 'sabe'],
             ['conheces', 'conhece'],
+            ['tens', 'tem'],
+            ['estás', 'está'],
+            ['és', 'é'],
             ['teu', 'seu'],
             ['tua', 'sua'],
             ['teus', 'seus'],
@@ -204,6 +205,9 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
             ['autocarro', 'ônibus'],
             ['contigo', 'com você'],
         ];
+
+        // Ordena por tamanho (maiores primeiro) para evitar substituições parciais
+        phraseCorrections.sort((a, b) => b[0].length - a[0].length);
 
         for (const [ptpt, ptbr] of phraseCorrections) {
             corrected = corrected.split(ptpt).join(ptbr);
