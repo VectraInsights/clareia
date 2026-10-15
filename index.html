@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clareia — Tutor Universitário com IA</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">💡</span>
+                <span class="logo-text">Clareia</span>
+            </a>
+            <div class="nav-links">
+                <a href="#sobre">Sobre</a>
+                <a href="#como-funciona">Como Funciona</a>
+                <a href="#impacto">Impacto</a>
+                <a href="#tutor" class="nav-cta">Experimentar Tutor</a>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🎓 Santander X Explorer</div>
+            <h1 class="hero-title">
+                Matérias difíceis?<br>
+                <span class="gradient-text">O Clareia explica.</span>
+            </h1>
+            <p class="hero-subtitle">
+                Um tutor universitário com inteligência artificial que transforma conteúdos complexos
+                em explicações claras e personalizadas — gratuito e acessível a todas as áreas.
+            </p>
+            <div class="hero-actions">
+                <a href="#tutor" class="btn btn-primary">Começar a Aprender</a>
+                <a href="#sobre" class="btn btn-secondary">Sobre o Projeto</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">ODS 4</span>
+                    <span class="stat-label">Educação de Qualidade</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">ODS 10</span>
+                    <span class="stat-label">Redução das Desigualdades</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="chat-preview">
+                <div class="chat-header">
+                    <span class="chat-avatar">💡</span>
+                    <span>Clareia Tutor</span>
+                </div>
+                <div class="chat-messages">
+                    <div class="msg msg-ai">
+                        Olá! Estou aqui para te ajudar a compreender qualquer matéria. Sobre o que tens dúvidas?
+                    </div>
+                    <div class="msg msg-user">
+                        Não entendo funções derivadas em Cálculo
+                    </div>
+                    <div class="msg msg-ai">
+                        Vamos por partes! Uma derivada mede a <strong>taxa de variação</strong> de algo.
+                        Pensa num carro: o velocímetro mostra a velocidade instantânea — isso é a derivada da posição!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre Section -->
+    <section id="sobre" class="section">
+        <div class="container">
+            <h2 class="section-title">O Problema que Resolvemos</h2>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="problem-icon">📚</div>
+                    <h3>Conteúdos Complexos</h3>
+                    <p>Muitos estudantes enfrentam dificuldades em compreender matérias universitárias que exigem apoio individualizado.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">💰</div>
+                    <h3>Custos Elevados</h3>
+                    <p>Explicações particulares podem representar um custo inacessível, criando desigualdades no sucesso académico.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🔄</div>
+                    <h3>Ritmos Diferentes</h3>
+                    <p>As explicações disponíveis nem sempre se adaptam ao nível de conhecimento ou ao ritmo de cada estudante.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Como Funciona -->
+    <section id="como-funciona" class="section section-alt">
+        <div class="container">
+            <h2 class="section-title">Como Funciona</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-number">01</div>
+                    <h3>🤖 Tutor IA Personalizado</h3>
+                    <p>Conversas interativas que esclarecem dúvidas e adaptam a linguagem ao teu nível de conhecimento.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">02</div>
+                    <h3>🔀 Múltiplas Explicações</h3>
+                    <p>O mesmo conceito explicado de diferentes maneiras — com analogias, exemplos práticos e linguagem simples.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">03</div>
+                    <h3>📎 Os Teus Materiais</h3>
+                    <p>Carrega apontamentos e outros materiais para o Clareia contextualizar as explicações.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">04</div>
+                    <h3>✏️ Exercícios Práticos</h3>
+                    <p>Proposição de exercícios para reforçar a compreensão e ajudar a fixar os conteúdos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impacto -->
+    <section id="impacto" class="section">
+        <div class="container">
+            <h2 class="section-title">Impacto Esperado</h2>
+            <div class="impact-content">
+                <div class="impact-main">
+                    <p class="impact-lead">
+                        Ao disponibilizar gratuitamente um tutor pessoal com IA, o Clareia pretende
+                        reduzir as barreiras económicas ao acompanhamento individualizado e
+                        contribuir para uma educação superior mais inclusiva.
+                    </p>
+                </div>
+                <div class="sdg-cards">
+                    <div class="sdg-card">
+                        <div class="sdg-badge sdg-4">ODS 4</div>
+                        <h4>Educação de Qualidade</h4>
+                        <p>Promover uma aprendizagem mais inclusiva e acessível, proporcionando apoio educativo personalizado.</p>
+                    </div>
+                    <div class="sdg-card">
+                        <div class="sdg-badge sdg-10">ODS 10</div>
+                        <h4>Redução das Desigualdades</h4>
+                        <p>Reduzir as diferenças no acesso a recursos educativos, independentemente da capacidade financeira.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tutor Section -->
+    <section id="tutor" class="section section-tutor">
+        <div class="container">
+            <h2 class="section-title">Experimenta o Tutor</h2>
+            <p class="section-subtitle">Conversa com o Clareia e vê como pode ajudar nos teus estudos.</p>
+
+            <div class="tutor-layout">
+                <!-- Sidebar -->
+                <aside class="tutor-sidebar">
+                    <div class="sidebar-section">
+                        <h4>📎 Os teus materiais</h4>
+                        <p class="sidebar-hint">Carrega apontamentos para contexto</p>
+                        <div class="upload-zone" id="uploadZone">
+                            <input type="file" id="fileInput" accept=".txt,.md,.pdf,.doc,.docx" hidden>
+                            <div class="upload-content">
+                                <span class="upload-icon">📄</span>
+                                <span>Clica ou arrasta ficheiros</span>
+                            </div>
+                        </div>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+                    <div class="sidebar-section">
+                        <h4>🎯 Nível</h4>
+                        <div class="level-selector" id="levelSelector">
+                            <button class="level-btn" data-level="iniciante">Iniciante</button>
+                            <button class="level-btn active" data-level="intermedio">Intermédio</button>
+                            <button class="level-btn" data-level="avançado">Avançado</button>
+                        </div>
+                    </div>
+                    <div class="sidebar-section">
+                        <h4>🔀 Modo de Explicação</h4>
+                        <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                            <button class="mode-btn active" data-mode="normal">📝 Normal</button>
+                            <button class="mode-btn" data-mode="analogia">🎭 Com Analogias</button>
+                            <button class="mode-btn" data-mode="simples">💡 Linguagem Simples</button>
+                            <button class="mode-btn" data-mode="exemplo">📊 Com Exemplos</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-exercise" id="exerciseBtn">✏️ Gerar Exercício</button>
+                </aside>
+
+                <!-- Chat Area -->
+                <div class="tutor-chat">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="msg msg-ai">
+                            <div class="msg-header">
+                                <span class="msg-avatar">💡</span>
+                                <span class="msg-name">Clareia</span>
+                            </div>
+                            Olá! Sou o <strong>Clareia</strong>, o teu tutor universitário com IA. Estou aqui para te ajudar a compreender qualquer matéria — ao teu ritmo.
+                            <br><br>
+                            Podes:
+                            <ul style="margin-top:0.5rem; padding-left:1.2rem;">
+                                <li>Fazer perguntas sobre qualquer tema</li>
+                                <li>Carregar os teus apontamentos para contexto</li>
+                                <li>Escolher o nível e o modo de explicação</li>
+                                <li>Pedir exercícios para praticar</li>
+                            </ul>
+                            <br>
+                            Sobre o que gostarias de aprender hoje?
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <div class="quick-actions">
+                            <button class="quick-btn" data-question="O que é uma derivada?">Derivadas</button>
+                            <button class="quick-btn" data-question="Explica a fotossíntese de forma simples">Fotossíntese</button>
+                            <button class="quick-btn" data-question="O que é a lei de Ohm?">Lei de Ohm</button>
+                            <button class="quick-btn" data-question="Explica o conceito de oferta e demanda">Oferta e Demanda</button>
+                        </div>
+                        <div class="chat-input-row">
+                            <textarea id="chatInput" placeholder="Escreve a tua pergunta..." rows="1"></textarea>
+                            <button class="btn btn-send" id="sendBtn">Enviar ↗</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <h3><span class="logo-icon">💡</span> Clareia</h3>
+                    <p class="footer-tagline">A tecnologia é o meio; a aprendizagem e a inclusão são o propósito.</p>
+                </div>
+                <div class="footer-info">
+                    <p><strong>Candidatura ao Santander X Explorer</strong></p>
+                    <p>Projeto de empreendedorismo social e educativo</p>
+                    <p>ODS 4 — Educação de Qualidade | ODS 10 — Redução das Desigualdades</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 Clareia. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="config.local.js"></script>
+    <script src="config.local.js"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
