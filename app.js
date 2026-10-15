@@ -34,6 +34,9 @@ const ClareiaTutor = {
 
     async callGroq(userMessage, systemPrompt, config) {
         try {
+            if (!config.GROQ_API_KEY) {
+                throw new Error('GROQ_API_KEY não configurada');
+            }
             const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                 method: 'POST',
                 headers: {
@@ -53,15 +56,25 @@ const ClareiaTutor = {
             });
 
             const data = await response.json();
+            if (!response.ok) {
+                throw new Error(`Groq HTTP ${response.status}: ${data.error?.message || JSON.stringify(data).substring(0, 200)}`);
+            }
+            if (!data.choices || !data.choices[0]?.message?.content) {
+                throw new Error('Groq retornou resposta vazia: ' + JSON.stringify(data).substring(0, 200));
+            }
             return data.choices[0].message.content;
         } catch (error) {
             console.error('Groq API Error:', error);
-            return this.getFallbackResponse(userMessage);
+            this.state.lastApiError = error.message;
+            return null;
         }
     },
 
     async callGemini(userMessage, systemPrompt, config) {
         try {
+            if (!config.GEMINI_API_KEY) {
+                throw new Error('GEMINI_API_KEY não configurada');
+            }
             const response = await fetch(
                 `https://generativelanguage.googleapis.com/v1beta/models/${config.GEMINI_MODEL}:generateContent?key=${config.GEMINI_API_KEY}`,
                 {
@@ -80,15 +93,26 @@ const ClareiaTutor = {
             );
 
             const data = await response.json();
-            return data.candidates[0].content.parts[0].text;
+            if (!response.ok) {
+                throw new Error(`Gemini HTTP ${response.status}: ${data.error?.message || JSON.stringify(data).substring(0, 200)}`);
+            }
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (!text) {
+                throw new Error('Gemini retornou resposta vazia: ' + JSON.stringify(data).substring(0, 200));
+            }
+            return text;
         } catch (error) {
             console.error('Gemini API Error:', error);
-            return this.getFallbackResponse(userMessage);
+            this.state.lastApiError = error.message;
+            return null;
         }
     },
 
     async callMistral(userMessage, systemPrompt, config) {
         try {
+            if (!config.MISTRAL_API_KEY) {
+                throw new Error('MISTRAL_API_KEY não configurada');
+            }
             const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
                 method: 'POST',
                 headers: {
@@ -108,10 +132,17 @@ const ClareiaTutor = {
             });
 
             const data = await response.json();
+            if (!response.ok) {
+                throw new Error(`Mistral HTTP ${response.status}: ${data.message || JSON.stringify(data).substring(0, 200)}`);
+            }
+            if (!data.choices || !data.choices[0]?.message?.content) {
+                throw new Error('Mistral retornou resposta vazia: ' + JSON.stringify(data).substring(0, 200));
+            }
             return data.choices[0].message.content;
         } catch (error) {
             console.error('Mistral API Error:', error);
-            return this.getFallbackResponse(userMessage);
+            this.state.lastApiError = error.message;
+            return null;
         }
     },
 
@@ -129,14 +160,14 @@ const ClareiaTutor = {
         const modeDescriptions = {
             normal: 'explicação direta e estruturada',
             analogia: 'explicação com muitas analogias, metáforas e exemplos do dia-a-dia',
-            simples: 'explicação com linguagem muito simples, como se explicasses a um amigo',
+            simples: 'explicação com linguagem muito simples, como se explicasse para um amigo',
             exemplo: 'explicação com muitos exemplos concretos e aplicações práticas'
         };
 
         return `IDIOMA OBRIGATÓRIO: PORTUGUÊS DO BRASIL (PT-BR). REGRA #1 - A MAIS IMPORTANTE.
 PROIBIDO: português de Portugal (PT-PT). Se você usar PT-PT, a resposta está ERRADA.
-Palavras PROIBIDAS: teu, tua, teus, tuas, tens, gostarias, és, estás, podes, queres, fazes, dás, ficheiro, ficheiros, equipa, apontamentos, Compreendeste, praticares, Deres, estás, está, podes.
-Palavras OBRIGATÓRIAS: seu, sua, seus, suas, tem, gostaria, é, está, pode, quer, faz, dá, arquivo, arquivos, equipe, anotações, Compreendeu, praticar, Der, está, está, pode.
+Palavras PROIBIDAS: teu, tua, teus, tuas, tens, gostarias, és, estás, podes, queres, fazes, dás, ficheiro, ficheiros, equipa, apontamentos, Compreendeste, praticares, deres.
+Palavras OBRIGATÓRIAS: seu, sua, seus, suas, tem, gostaria, é, está, pode, quer, faz, dá, arquivo, arquivos, equipe, anotações, Compreendeu, praticar, você der.
 EXEMPLOS CORRETOS: "Você pode fazer perguntas", "Seu ritmo", "Escreva sua pergunta", "Tente resolver", "Compreendeu?".
 
 Você é o CLAREIA, um tutor universitário de inteligência artificial, gratuito e acessível.
@@ -188,6 +219,8 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
             ['fazes', 'faz'],
             ['dás', 'dá'],
             ['podes', 'pode'],
+            ['Tenta', 'Tente'],
+            ['tenta', 'tente'],
             ['sabes', 'sabe'],
             ['conheces', 'conhece'],
             ['tens', 'tem'],
@@ -226,6 +259,7 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
         if (topic) this.state.lastTopic = topic;
 
         const systemPrompt = this.buildSystemPrompt();
+        this.state.lastApiError = null;
         let apiResponse = await this.callAPI(question, systemPrompt);
 
         if (apiResponse) {
@@ -239,7 +273,13 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
             return apiResponse;
         }
 
-        return this.getLocalResponse(question);
+        // A API falhou: mostra o erro real em vez de resposta genérica silenciosa.
+        // Se o tópico existe na base local, usa a base local como apoio.
+        const localTopic = topic && this.knowledgeBase[topic] ? this.getLocalResponse(question) : null;
+        const apiName = (window.CLAREIA_CONFIG?.ACTIVE_API || 'groq').toUpperCase();
+        const detail = this.state.lastApiError || 'sem detalhes';
+        const localPart = localTopic ? `\n\n---\n📚 **Resposta da base local (modo offline):**\n\n${localTopic}` : '';
+        return `⚠️ **Não consegui gerar uma resposta pela ${apiName} agora.**\n\n**Motivo:** ${detail}\n\n**Como resolver:**\n- Abra a página \`api-test.html\` no site e clique em "Testar" para ver o erro exato\n- Confira no Vercel se as variáveis \`GROQ_API_KEY\`, \`GEMINI_API_KEY\`, \`MISTRAL_API_KEY\` e \`ACTIVE_API\` estão configuradas\n- Confira se o modelo configurado ainda existe (a Groq desativa modelos antigos)${localPart}`;
     },
 
     getLocalResponse(question) {
@@ -274,7 +314,7 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
             return response;
         }
 
-        return `Boa pergunta! Para te ajudar melhor, podes:\n- **Especificar** a disciplina\n- **Dar mais contexto** sobre o que já sabes\n- **Carregar apontamentos** na barra lateral\n\nQuanto mais detalhes deres, mais personalizada será a explicação! 😊`;
+        return `Boa pergunta! Para ajudar melhor, você pode:\n- **Especificar** a disciplina\n- **Dar mais contexto** sobre o que você já sabe\n- **Carregar anotações** na barra lateral\n\nQuanto mais detalhes você der, mais personalizada será a explicação! 😊`;
     },
 
     getFallbackResponse(question) {
@@ -286,7 +326,7 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
         const exercises = this.exerciseBank[topic];
         const exercise = exercises[Math.floor(Math.random() * exercises.length)];
 
-        return `✏️ **Exercício — ${this.capitalize(topic)}**\n\n**Questão:** ${exercise.q}\n\n💭 Tente resolver sozinho primeiro! Quando quiser ver a resposta, diz "mostrar resposta".\n\n💡 **Dica:** ${this.getHint(topic)}`;
+        return `✏️ **Exercício — ${this.capitalize(topic)}**\n\n**Questão:** ${exercise.q}\n\n💭 Tente resolver sozinho primeiro! Quando quiser ver a resposta, diga "mostrar resposta".\n\n💡 **Dica:** ${this.getHint(topic)}`;
     },
 
     // ============================================================
@@ -326,64 +366,64 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
     getHint(topic) {
         const hints = {
             'derivada': 'Lembre-se das regras: potência, produto, quociente e cadeia.',
-            'fotossintese': 'Pense nos reagentes e produtos. A luz é necessária apenas numa das fases.',
-            'lei de ohm': 'Identifica o que te dão e o que te pedem. V = R × I.',
-            'oferta e demanda': 'Faz um gráfico com as duas curvas. O ponto onde se cruzam é o equilíbrio.',
-            'limite': 'Tenta substituir primeiro. Se der 0/0, simplifica ou usa L\'Hôpital.',
+            'fotossintese': 'Pense nos reagentes e produtos. A luz é necessária apenas em uma das fases.',
+            'lei de ohm': 'Identifique o que a questão dá e o que ela pede. Use V = R × I.',
+            'oferta e demanda': 'Faça um gráfico com as duas curvas. O ponto onde elas se cruzam é o equilíbrio.',
+            'limite': 'Tente substituir primeiro. Se der 0/0, simplifique ou use L\'Hôpital.',
             'matriz': 'Verifique as dimensões antes de multiplicar. O determinante só existe para matrizes quadradas.',
-            'integrais': 'Pense qual é a função cuja derivada te dá o integrando. Não esqueças C!',
+            'integrais': 'Pense em qual função tem como derivada o integrando. Não esqueça o C!',
             'logistica': 'Pense no fluxo: como as coisas se movem do ponto A ao ponto B de forma eficiente.',
-            'estatistica': 'Identifica primeiro o tipo de dados e depois escolhe a medida apropriada.',
-            'programacao': 'Decomponha o problema em passos pequenos e testa cada parte.',
+            'estatistica': 'Identifique primeiro o tipo de dados e depois escolha a medida apropriada.',
+            'programacao': 'Divida o problema em passos pequenos e teste cada parte.',
             'economia': 'Pense nos incentivos: como as pessoas reagem a custos e benefícios?',
-            'quimica': 'Conte os átomos de cada lado. A equação tem de estar equilibrada.',
-            'fisica': 'Identifica as forças envolvidas e aplica as leis de Newton.',
+            'quimica': 'Conte os átomos de cada lado. A equação precisa estar balanceada.',
+            'fisica': 'Identifique as forças envolvidas e aplique as leis de Newton.',
             'biologia': 'Pense na função: para que serve essa estrutura ou processo?',
             'filosofia': 'Questione os pressupostos. O que está sendo dado como garantido?'
         };
-        return hints[topic] || 'Leia o enunciado com atenção e identifica os dados fornecidos.';
+        return hints[topic] || 'Leia o enunciado com atenção e identifique os dados fornecidos.';
     },
 
     knowledgeBase: {
         'derivada': {
-            simple: 'Uma derivada mede a **taxa de variação** de algo. Pense num carro: o velocímetro mostra a velocidade instantânea — isso é a derivada da posição em relação ao tempo.',
+            simple: 'Uma derivada mede a **taxa de variação** de algo. Pense em um carro: o velocímetro mostra a velocidade instantânea — isso é a derivada da posição em relação ao tempo.',
             analogy: 'A derivada é como o velocímetro do seu carro. O velocímetro não diz onde está (isso é a função), mas sim a que velocidade está mudando de posição (isso é a derivada).',
             advanced: 'A derivada de uma função f(x) em um ponto x=a é definida como o limite: f\'(a) = lim(h→0) [f(a+h) - f(a)] / h. Geometricamente, representa a inclinação da reta tangente ao gráfico nesse ponto.',
             examples: ['Se f(x) = x², então f\'(x) = 2x. Em x=3, a taxa de variação é 6.', 'Se s(t) = 4t² + 2t (posição), então v(t) = s\'(t) = 8t + 2 (velocidade)']
         },
         'fotossintese': {
-            simple: 'A fotossíntese é como uma **fábrica de comida** das plantas. Elas pegam luz solar, água e ar (CO₂) e transformam em açúcar (alimento) e oxigénio.',
-            analogy: 'Imagina a folha como uma cozinha. A luz solar é o fogão, a água é um ingrediente, o CO₂ do ar é outro ingrediente. O resultado é açúcar (a comida da planta) e oxigénio (que nós respiramos!).',
+            simple: 'A fotossíntese é como uma **fábrica de comida** das plantas. Elas usam luz solar, água e ar (CO₂) e transformam em açúcar (alimento) e oxigênio.',
+            analogy: 'Imagine a folha como uma cozinha. A luz solar é o fogão, a água é um ingrediente e o CO₂ do ar é outro ingrediente. O resultado é açúcar (a comida da planta) e oxigênio (que a gente respira!).',
             advanced: 'A fotossíntese ocorre em duas fases: (1) Fase clara (tilacoides): fotólise da água, produção de ATP e NADPH. (2) Ciclo de Calvin (estroma): fixação do CO₂ via RuBisCO, produção de G3P. Equação: 6CO₂ + 6H₂O + luz → C₆H₁₂O₆ + 6O₂.',
-            examples: ['Uma árvore de porte médio pode produzir cerca de 100kg de oxigénio por year.']
+            examples: ['Uma árvore de porte médio pode produzir cerca de 100kg de oxigênio por ano.']
         },
         'lei de ohm': {
             simple: 'A Lei de Ohm diz que a **tensão** é igual à **corrente** multiplicada pela **resistência**: V = R × I.',
-            analogy: 'Pense num tubo de água: a tensão é a pressão da água, a corrente é a quantidade de água que passa, e a resistência é o estreitamento do tubo.',
+            analogy: 'Pense em um tubo de água: a tensão é a pressão da água, a corrente é a quantidade de água que passa, e a resistência é o estreitamento do tubo.',
             advanced: 'A Lei de Ohm V = R × I é válida para resistores ômicos. Em circuitos CA, generaliza-se como V = Z × I, onde Z é a impedância complexa. A potência dissipada é P = V × I = I² × R = V²/R.',
             examples: ['Se tem uma bateria de 9V e um resistor de 3Ω, a corrente é I = V/R = 9/3 = 3A.']
         },
         'oferta e demanda': {
-            simple: 'Oferta é o que os vendedores querem vender. Demanda é o que os compradores querem comprar. O **preço** encontra-se quando os dois se equilibram.',
-            analogy: 'Imagina um leilão de bicicletas. Se há muitas bicicletas (muita oferta) e poucos compradores (pouca demanda), o preço desce.',
+            simple: 'Oferta é o que os vendedores querem vender. Demanda é o que os compradores querem comprar. O **preço** se ajusta até os dois lados se equilibrarem.',
+            analogy: 'Imagine um leilão de bicicletas. Se há muitas bicicletas (muita oferta) e poucos compradores (pouca demanda), o preço cai.',
             advanced: 'A curva de oferta é crescente (preço maior → maior quantidade ofertada). A curva de demanda é decrescente (preço maior → menor quantidade demandada). O equilíbrio de mercado ocorre na interseção.',
             examples: ['Quando a Apple lança um novo iPhone, a demanda pelo modelo anterior cai → preço diminui.']
         },
         'limite': {
             simple: 'Um limite é o valor para o qual uma função **se aproxima** quando a variável se aproxima de um certo ponto.',
-            analogy: 'Pense num gato a aproximar-se de um rato. O gato nunca chega exatamente ao rato, mas aproxima-se infinitamente. O limite é a distância mínima a que o gato chega.',
+            analogy: 'Pense em um gato se aproximando de um rato. O gato nunca encosta no rato, mas chega cada vez mais perto. O limite é o ponto mínimo dessa aproximação.',
             advanced: 'Formalmente: lim(x→a) f(x) = L significa que para todo ε > 0, existe δ > 0 tal que 0 < |x - a| < δ implica |f(x) - L| < ε.',
             examples: ['lim(x→0) sin(x)/x = 1', 'lim(x→∞) (1 + 1/x)^x = e']
         },
         'matriz': {
             simple: 'Uma **matriz** é uma tabela de números organizada em linhas e colunas.',
-            analogy: 'Pense numa matriz como um tabuleiro de xadrez onde cada casa tem um número.',
+            analogy: 'Pense em uma matriz como um tabuleiro de xadrez onde cada casa tem um número.',
             advanced: 'Uma matriz A ∈ M(m×n) é um arranjo retangular a_ij. Operações: soma, multiplicação, transposição, inversão.',
             examples: ['A matriz identidade I tem 1s na diagonal principal e 0s no resto.']
         },
         'integrais': {
             simple: 'Uma integral é como somar infinitas peças pequenas para encontrar o **total**.',
-            analogy: 'Pense que queres saber a área de um lago irregular. Divides em faixas muito estreitas, calculas a área de cada uma e somas.',
+            analogy: 'Pense que você quer saber a área de um lago com formato irregular. Uma saída é dividir o lago em faixas bem finas, calcular a área de cada uma e somar tudo.',
             advanced: 'A integral definida ∫[a,b] f(x)dx é o limite de somas de Riemann. O Teorema Fundamental do Cálculo: se F\' = f, então ∫[a,b] f(x)dx = F(b) - F(a).',
             examples: ['∫ x^n dx = x^(n+1)/(n+1) + C (para n ≠ -1)']
         }
@@ -391,7 +431,7 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
 
     exerciseBank: {
         'derivada': [
-            { q: 'Calcula a derivada de f(x) = 3x² + 2x - 5', a: 'f\'(x) = 6x + 2' },
+            { q: 'Calcule a derivada de f(x) = 3x² + 2x - 5', a: 'f\'(x) = 6x + 2' },
             { q: 'Qual é a derivada de f(x) = sin(x)?', a: 'f\'(x) = cos(x)' },
             { q: 'Se f(x) = e^x, qual é f\'(x)?', a: 'f\'(x) = e^x' }
         ],
@@ -407,13 +447,13 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
             { q: 'O que acontece com o preço de equilíbrio se a demanda aumentar?', a: 'O preço de equilíbrio sobe e a quantidade transacionada aumenta.' }
         ],
         'limite': [
-            { q: 'Calcula lim(x→2) (x² - 4)/(x - 2)', a: 'Simplificando: (x²-4)/(x-2) = x+2, logo lim = 4' }
+            { q: 'Calcule lim(x→2) (x² - 4)/(x - 2)', a: 'Simplificando: (x²-4)/(x-2) = x+2, logo lim = 4' }
         ],
         'matriz': [
-            { q: 'Calcula o determinante de A = [[2, 3], [1, 4]]', a: 'det(A) = 2×4 - 3×1 = 8 - 3 = 5' }
+            { q: 'Calcule o determinante de A = [[2, 3], [1, 4]]', a: 'det(A) = 2×4 - 3×1 = 8 - 3 = 5' }
         ],
         'integrais': [
-            { q: 'Calcula ∫(2x + 3) dx', a: 'x² + 3x + C' }
+            { q: 'Calcule ∫(2x + 3) dx', a: 'x² + 3x + C' }
         ]
     }
 };

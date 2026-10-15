@@ -8,12 +8,21 @@
 // - ACTIVE_API (groq, gemini ou mistral)
 // ============================================================
 
+function __clareiaEnv(name) {
+    try {
+        if (typeof process !== 'undefined' && process.env && process.env[name]) {
+            return process.env[name];
+        }
+    } catch (e) { /* browser: process não existe, ignora */ }
+    return '';
+}
+
 window.CLAREIA_CONFIG = {
-    GROQ_API_KEY: process.env.GROQ_API_KEY || '',
-    GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
-    MISTRAL_API_KEY: process.env.MISTRAL_API_KEY || '',
-    GROQ_MODEL: 'llama-3.3-70b-versatile',
+    GROQ_API_KEY: __clareiaEnv('GROQ_API_KEY'),
+    GEMINI_API_KEY: __clareiaEnv('GEMINI_API_KEY'),
+    MISTRAL_API_KEY: __clareiaEnv('MISTRAL_API_KEY'),
+    GROQ_MODEL: 'llama-3.1-8b-instant',
     GEMINI_MODEL: 'gemini-2.0-flash',
     MISTRAL_MODEL: 'mistral-large-latest',
-    ACTIVE_API: process.env.ACTIVE_API || 'groq'
+    ACTIVE_API: __clareiaEnv('ACTIVE_API') || 'groq'
 };

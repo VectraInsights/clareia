@@ -8,7 +8,7 @@ if (!fs.existsSync(distDir)) {
 }
 
 // Copia todos os arquivos estáticos
-const staticFiles = ['index.html', 'styles.css', 'app.js'];
+const staticFiles = ['index.html', 'styles.css', 'app.js', 'api-test.html'];
 staticFiles.forEach(file => {
     fs.copyFileSync(
         path.join(__dirname, file),
@@ -21,7 +21,7 @@ const configContent = `window.CLAREIA_CONFIG = {
     GROQ_API_KEY: '${process.env.GROQ_API_KEY || ''}',
     GEMINI_API_KEY: '${process.env.GEMINI_API_KEY || ''}',
     MISTRAL_API_KEY: '${process.env.MISTRAL_API_KEY || ''}',
-    GROQ_MODEL: 'llama-3.3-70b-versatile',
+    GROQ_MODEL: 'llama-3.1-8b-instant',
     GEMINI_MODEL: 'gemini-2.0-flash',
     MISTRAL_MODEL: 'mistral-large-latest',
     ACTIVE_API: '${process.env.ACTIVE_API || 'groq'}'
@@ -30,4 +30,4 @@ const configContent = `window.CLAREIA_CONFIG = {
 
 fs.writeFileSync(path.join(distDir, 'config.js'), configContent);
 
-console.log('Build completo! config.js gerado com variáveis de ambiente. Versão PT-BR 3.0');
+console.log('Build completo! config.js gerado com variáveis de ambiente. Versão PT-BR 3.1');
