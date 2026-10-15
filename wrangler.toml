@@ -1,0 +1,11 @@
+name = "clareia"
+compatibility_date = "2024-12-01"
+
+[build]
+command = "npm install && node build.js"
+
+[site]
+bucket = "./dist"
+
+[vars]
+CLAREIA_ACTIVE_API = "groq"
