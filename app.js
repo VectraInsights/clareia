@@ -481,6 +481,7 @@ function addMessage(text, type = 'ai') {
     const msgDiv = document.createElement('div');
     msgDiv.className = `msg msg-${type}`;
     let html = text
+        .replace(/^(#{1,4})\s*(.+)$/gm, '<div class="md-heading">$2</div>')
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
         .replace(/```(.+?)```/gs, '<pre>$1</pre>')

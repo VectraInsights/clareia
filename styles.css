@@ -337,9 +337,15 @@ body {
     border-radius: 0 var(--radius) var(--radius) 0;
 }
 .tutor-layout.tutor-fullscreen .msg-ai,
-.tutor-layout.tutor-fullscreen .msg-user {
-    max-width: 78%;
-    font-size: 0.95rem;
+.tutor-layout.tutor-fullscreen .msg-user,
+.tutor-layout.tutor-fullscreen .msg-exercise {
+    max-width: 100%;
+    font-size: 0.98rem;
+    line-height: 1.75;
+}
+.tutor-layout.tutor-fullscreen .tutor-chat .chat-messages {
+    padding: 2rem 2.5rem;
+    gap: 1.2rem;
 }
 body.tutor-locked { overflow: hidden; }
 
@@ -475,13 +481,14 @@ body.tutor-locked { overflow: hidden; }
     overflow: hidden;
 }
 
-.chat-messages {
+.tutor-chat .chat-messages {
     flex: 1;
     padding: 1.5rem;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    max-height: none;
 }
 
 .msg-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
@@ -513,6 +520,18 @@ body.tutor-locked { overflow: hidden; }
     border: 1px solid rgba(251, 191, 36, 0.2);
 }
 .msg-exercise .msg-name { color: var(--warning); }
+
+/* Títulos markdown (##, ###, ####) dentro das respostas */
+.md-heading {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 1.02rem;
+    color: var(--text-primary);
+    margin: 0.9rem 0 0.4rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--border);
+}
+.md-heading:first-child { margin-top: 0; }
 
 .typing-indicator { display: flex; gap: 4px; padding: 0.5rem 0; }
 .typing-indicator span {
