@@ -160,44 +160,55 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
 
     // Correção automática de PT-PT para PT-BR
     correctToPTBR(text) {
-        const corrections = {
-            // Pronomes e possessivos
-            'teu': 'seu', 'tua': 'sua', 'teus': 'seus', 'tuas': 'suas',
-            'ti': 'você', 'contigo': 'com você',
-            // Verbos
-            'tens': 'tem', 'tiveste': 'teve', 'gostarias': 'gostaria',
-            'és': 'é', 'estás': 'está', 'pode': 'pode', 'podes': 'pode',
-            'queres': 'quer', 'fazes': 'faz', 'dás': 'dá', 'tens': 'tem',
-            'vais': 'vai', 'tens': 'tem', 'sabes': 'sabe', 'conheces': 'conhece',
-            'tens': 'tem', 'podes': 'pode', 'queres': 'quer',
-            // Substantivos
-            'ficheiro': 'arquivo', 'ficheiros': 'arquivos',
-            'equipa': 'equipe', 'apontamentos': 'anotações',
-            'telemóvel': 'celular', 'autocarro': 'ônibus',
-            // Expressões
-            'Compreendeste': 'Compreendeu', 'compreendeste': 'compreendeu',
-            'praticares': 'praticar', 'Deres': 'Der',
-            'estás': 'está', 'estás': 'está',
-            // Palavras compostas
-            'a ser dado': 'sendo dado', 'a ser feito': 'sendo feito',
-            // Outros
-            'não és': 'não é', 'não estás': 'não está',
-            'já sabes': 'já sabe', 'já tens': 'já tem',
-            'se quiseres': 'se quiser', 'se podes': 'se pode',
-            'se fazes': 'se faz', 'se dás': 'se dá',
-            // Frases comuns
-            'Para te ajudar': 'Para ajudar',
-            'para te ajudar': 'para ajudar',
-            'ajudar-te': 'ajudar você',
-            'contigo': 'com você',
-            'ti': 'você',
-        };
-
         let corrected = text;
-        for (const [ptpt, ptbr] of Object.entries(corrections)) {
-            const regex = new RegExp(`\\b${ptpt}\\b`, 'gi');
-            corrected = corrected.replace(regex, ptbr);
+
+        // Substituições de frases inteiras (mais específicas primeiro)
+        const phraseCorrections = [
+            ['Para te ajudar melhor, podes:', 'Para ajudar melhor, você pode:'],
+            ['Para te ajudar', 'Para ajudar'],
+            ['para te ajudar', 'para ajudar'],
+            ['ajudar-te', 'ajudar você'],
+            ['Quanto mais detalhes deres', 'Quanto mais detalhes você der'],
+            ['deres, mais personalizada', 'você der, mais personalizada'],
+            ['Compreendeste?', 'Compreendeu?'],
+            ['compreendeste', 'compreendeu'],
+            ['praticares', 'praticar'],
+            ['Nunca partilhes', 'Nunca compartilhe'],
+            ['não és', 'não é'],
+            ['não estás', 'não está'],
+            ['já sabes', 'já sabe'],
+            ['já tens', 'já tem'],
+            ['se quiseres', 'se quiser'],
+            ['se podes', 'se pode'],
+            ['se fazes', 'se faz'],
+            ['se dás', 'se dá'],
+            ['estás', 'está'],
+            ['és', 'é'],
+            ['tens', 'tem'],
+            ['gostarias', 'gostaria'],
+            ['queres', 'quer'],
+            ['fazes', 'faz'],
+            ['dás', 'dá'],
+            ['podes', 'pode'],
+            ['sabes', 'sabe'],
+            ['conheces', 'conhece'],
+            ['teu', 'seu'],
+            ['tua', 'sua'],
+            ['teus', 'seus'],
+            ['tuas', 'suas'],
+            ['ficheiro', 'arquivo'],
+            ['ficheiros', 'arquivos'],
+            ['equipa', 'equipe'],
+            ['apontamentos', 'anotações'],
+            ['telemóvel', 'celular'],
+            ['autocarro', 'ônibus'],
+            ['contigo', 'com você'],
+        ];
+
+        for (const [ptpt, ptbr] of phraseCorrections) {
+            corrected = corrected.split(ptpt).join(ptbr);
         }
+
         return corrected;
     },
 
