@@ -209,8 +209,13 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
         // Ordena por tamanho (maiores primeiro) para evitar substituições parciais
         phraseCorrections.sort((a, b) => b[0].length - a[0].length);
 
+        // Usa regex com lookahead/lookbehind para garantir que a palavra está isolada
         for (const [ptpt, ptbr] of phraseCorrections) {
-            corrected = corrected.split(ptpt).join(ptbr);
+            // Escapa caracteres especiais para regex
+            const escaped = ptpt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            // Substitui apenas se a palavra estiver isolada (não seguida de letra ou número)
+            const regex = new RegExp(`(?<![a-zA-Zà-ÿÀ-ÿ])${escaped}(?![a-zA-Zà-ÿÀ-ÿ])`, 'gi');
+            corrected = corrected.replace(regex, ptbr);
         }
 
         return corrected;
