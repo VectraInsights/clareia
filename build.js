@@ -18,11 +18,13 @@ staticFiles.forEach(file => {
 
 // Gera config.js com as variáveis de ambiente
 const configContent = `window.CLAREIA_CONFIG = {
-    GROQ_API_KEY: '${process.env.CLAREIA_GROQ_KEY || ''}',
-    GEMINI_API_KEY: '${process.env.CLAREIA_GEMINI_KEY || ''}',
+    GROQ_API_KEY: '${process.env.GROQ_API_KEY || ''}',
+    GEMINI_API_KEY: '${process.env.GEMINI_API_KEY || ''}',
+    MISTRAL_API_KEY: '${process.env.MISTRAL_API_KEY || ''}',
     GROQ_MODEL: 'llama-3.3-70b-versatile',
     GEMINI_MODEL: 'gemini-2.0-flash',
-    ACTIVE_API: '${process.env.CLAREIA_ACTIVE_API || 'groq'}'
+    MISTRAL_MODEL: 'mistral-large-latest',
+    ACTIVE_API: '${process.env.ACTIVE_API || 'groq'}'
 };
 `;
 

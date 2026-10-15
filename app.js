@@ -1,6 +1,6 @@
 // ============================================================
 // CLAREIA — Tutor IA Universitário
-// Versão 2.0 — Integração com APIs reais (Groq + Gemini)
+// Versão 3.0 — Integração com Groq, Gemini e Mistral
 // ============================================================
 
 const ClareiaTutor = {
@@ -14,16 +14,19 @@ const ClareiaTutor = {
     },
 
     // ============================================================
-    // INTEGRAÇÃO COM API
+    // INTEGRAÇÃO COM APIs
     // ============================================================
 
     async callAPI(userMessage, systemPrompt) {
         const config = window.CLAREIA_CONFIG;
+        const activeAPI = config.ACTIVE_API || 'groq';
 
-        if (config.ACTIVE_API === 'groq') {
+        if (activeAPI === 'groq') {
             return this.callGroq(userMessage, systemPrompt, config);
-        } else if (config.ACTIVE_API === 'gemini') {
+        } else if (activeAPI === 'gemini') {
             return this.callGemini(userMessage, systemPrompt, config);
+        } else if (activeAPI === 'mistral') {
+            return this.callMistral(userMessage, systemPrompt, config);
         }
 
         return null;
@@ -84,6 +87,34 @@ const ClareiaTutor = {
         }
     },
 
+    async callMistral(userMessage, systemPrompt, config) {
+        try {
+            const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${config.MISTRAL_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: config.MISTRAL_MODEL,
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        ...this.state.conversationHistory.slice(-8),
+                        { role: 'user', content: userMessage }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 1500
+                })
+            });
+
+            const data = await response.json();
+            return data.choices[0].message.content;
+        } catch (error) {
+            console.error('Mistral API Error:', error);
+            return this.getFallbackResponse(userMessage);
+        }
+    },
+
     // ============================================================
     // PROMPT ENGINEERING
     // ============================================================
@@ -109,7 +140,7 @@ MISSÃO: Ajudar estudantes universitários a compreender matérias difíceis, pr
 ESTILO DE RESPOSTA:
 - Nível: ${levelDescriptions[this.state.level]}
 - Modo: ${modeDescriptions[this.state.mode]}
-- Responde SEMPRE em português de Portugal
+- Responde SEMPRE em português do Brasil
 - Usa formatação markdown (negrito, listas, etc.)
 - Estrutura as respostas com parágrafos curtos e claros
 - No final, sugere uma pergunta follow-up ou exercício
@@ -123,17 +154,13 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
     // ============================================================
 
     async generateResponse(question) {
-        // Detecta tópico para exercícios
         const topic = this.detectTopic(question);
         if (topic) this.state.lastTopic = topic;
 
         const systemPrompt = this.buildSystemPrompt();
-
-        // Tenta API real
         const apiResponse = await this.callAPI(question, systemPrompt);
 
         if (apiResponse) {
-            // Atualiza histórico
             this.state.conversationHistory.push(
                 { role: 'user', content: question },
                 { role: 'assistant', content: apiResponse }
@@ -141,7 +168,6 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
             return apiResponse;
         }
 
-        // Fallback para resposta local
         return this.getLocalResponse(question);
     },
 
@@ -247,7 +273,6 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
         return hints[topic] || 'Lê o enunciado com atenção e identifica os dados fornecidos.';
     },
 
-    // Fallback knowledge base (usado se API falhar)
     knowledgeBase: {
         'derivada': {
             simple: 'Uma derivada mede a **taxa de variação** de algo. Pensa num carro: o velocímetro mostra a velocidade instantânea — isso é a derivada da posição em relação ao tempo.',
@@ -259,7 +284,7 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
             simple: 'A fotossíntese é como uma **fábrica de comida** das plantas. Elas pegam luz solar, água e ar (CO₂) e transformam em açúcar (alimento) e oxigénio.',
             analogy: 'Imagina a folha como uma cozinha. A luz solar é o fogão, a água é um ingrediente, o CO₂ do ar é outro ingrediente. O resultado é açúcar (a comida da planta) e oxigénio (que nós respiramos!).',
             advanced: 'A fotossíntese ocorre em duas fases: (1) Fase clara (tilacoides): fotólise da água, produção de ATP e NADPH. (2) Ciclo de Calvin (estroma): fixação do CO₂ via RuBisCO, produção de G3P. Equação: 6CO₂ + 6H₂O + luz → C₆H₁₂O₆ + 6O₂.',
-            examples: ['Uma árvore de porte médio pode produzir cerca de 100kg de oxigénio por ano.']
+            examples: ['Uma árvore de porte médio pode produzir cerca de 100kg de oxigénio por year.']
         },
         'lei de ohm': {
             simple: 'A Lei de Ohm diz que a **tensão** é igual à **corrente** multiplicada pela **resistência**: V = R × I.',
@@ -293,7 +318,6 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
         }
     },
 
-    // Exercise bank
     exerciseBank: {
         'derivada': [
             { q: 'Calcula a derivada de f(x) = 3x² + 2x - 5', a: 'f\'(x) = 6x + 2' },
@@ -339,16 +363,12 @@ const exerciseBtn = document.getElementById('exerciseBtn');
 function addMessage(text, type = 'ai') {
     const msgDiv = document.createElement('div');
     msgDiv.className = `msg msg-${type}`;
-    
-    // Simple markdown rendering
     let html = text
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
         .replace(/```(.+?)```/gs, '<pre>$1</pre>')
         .replace(/^- (.+)$/gm, '<li>$1</li>')
-        .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
         .replace(/\n/g, '<br>');
-    
     msgDiv.innerHTML = html;
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -391,7 +411,6 @@ async function handleSend() {
     } else {
         const response = await ClareiaTutor.generateResponse(question);
         addMessage(response, 'ai');
-
         const topic = ClareiaTutor.detectTopic(question);
         if (topic) ClareiaTutor.state.lastTopic = topic;
     }
@@ -399,7 +418,6 @@ async function handleSend() {
     sendBtn.disabled = false;
 }
 
-// Event listeners
 document.querySelectorAll('.quick-action').forEach(btn => {
     btn.addEventListener('click', () => {
         chatInput.value = btn.dataset.question;
@@ -432,7 +450,6 @@ exerciseBtn.addEventListener('click', async () => {
     sendBtn.disabled = false;
 });
 
-// File upload
 uploadZone.addEventListener('click', () => fileInput.click());
 
 fileInput.addEventListener('change', (e) => {
@@ -481,7 +498,6 @@ function handleFile(file) {
     }
 }
 
-// Level selector
 levelSelector.addEventListener('click', (e) => {
     if (e.target.classList.contains('level-btn')) {
         document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
@@ -492,7 +508,6 @@ levelSelector.addEventListener('click', (e) => {
     }
 });
 
-// Mode buttons
 document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
@@ -501,7 +516,6 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
     });
 });
 
-// Mobile menu
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 if (mobileMenuBtn) {
     mobileMenuBtn.addEventListener('click', () => {
@@ -510,7 +524,6 @@ if (mobileMenuBtn) {
     });
 }
 
-// Smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', (e) => {
         e.preventDefault();
@@ -519,5 +532,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-console.log('💡 Clareia Tutor v2.0 ready!');
+console.log('💡 Clareia Tutor v3.0 ready!');
+console.log('   APIs: Groq, Gemini, Mistral');
 console.log('   API ativa:', window.CLAREIA_CONFIG?.ACTIVE_API || 'não configurada');
