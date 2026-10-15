@@ -140,13 +140,13 @@ MISSÃO: Ajudar estudantes universitários a compreender matérias difíceis, pr
 ESTILO DE RESPOSTA:
 - Nível: ${levelDescriptions[this.state.level]}
 - Modo: ${modeDescriptions[this.state.mode]}
-- Responde SEMPRE em português do Brasil
+- ⚠️ IDIOMA OBRIGATÓRIO: Responde SEMPRE em PORTUGUÊS DO BRASIL (PT-BR). NUNCA use português de Portugal. NUNCA use "teu", "tua", "tens", "gostarias", "és", "estás", "podes", "queres", "fazes", "dás", "ficheiro", "equipa", "apontamentos". Use sempre "seu", "sua", "tem", "gostaria", "é", "está", "pode", "quer", "faz", "dá", "arquivo", "equipe", "anotações".
 - Usa formatação markdown (negrito, listas, etc.)
 - Estrutura as respostas com parágrafos curtos e claros
 - No final, sugere uma pergunta follow-up ou exercício
 - Sê encorajador e motivador
 
-${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + this.state.context.substring(0, 2000) + '\n--- FIM DO CONTEXTO ---' : ''}`;
+${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + this.state.context.substring(0, 2000) + '\n--- FIM DO CONTEXTO ---' : ''}`;
     },
 
     // ============================================================
