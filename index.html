@@ -158,15 +158,15 @@
     <!-- Tutor Section -->
     <section id="tutor" class="section section-tutor">
         <div class="container">
-            <h2 class="section-title">Experimenta o Tutor</h2>
-            <p class="section-subtitle">Conversa com o Clareia e vê como pode ajudar nos seus estudos.</p>
+            <h2 class="section-title">Experimente o Tutor</h2>
+            <p class="section-subtitle">Converse com o Clareia e veja como ele pode ajudar nos seus estudos.</p>
 
-            <div class="tutor-layout">
+            <div class="tutor-layout" id="tutorLayout">
                 <!-- Sidebar -->
                 <aside class="tutor-sidebar">
                     <div class="sidebar-section">
                         <h4>📎 Seus materiais</h4>
-                        <p class="sidebar-hint">Carregue apontamentos para contexto</p>
+                        <p class="sidebar-hint">Carregue anotações para contexto</p>
                         <div class="upload-zone" id="uploadZone">
                             <input type="file" id="fileInput" accept=".txt,.md,.pdf,.doc,.docx" hidden>
                             <div class="upload-content">
@@ -198,6 +198,10 @@
 
                 <!-- Chat Area -->
                 <div class="tutor-chat">
+                    <div class="tutor-chat-header">
+                        <div class="tutor-chat-title"><span>💡</span> Clareia Tutor</div>
+                        <button class="tutor-expand-btn" id="expandBtn" title="Abrir o tutor em tela cheia">⛶ Tela cheia</button>
+                    </div>
                     <div class="chat-messages" id="chatMessages">
                         <div class="msg msg-ai">
                             <div class="msg-header">
@@ -209,7 +213,7 @@
                             Você pode:
                             <ul style="margin-top:0.5rem; padding-left:1.2rem;">
                                 <li>Fazer perguntas sobre qualquer tema</li>
-                                <li>Carregar seus apontamentos para contexto</li>
+                                <li>Carregar suas anotações para contexto</li>
                                 <li>Escolher o nível e o modo de explicação</li>
                                 <li>Pedir exercícios para praticar</li>
                             </ul>

@@ -182,6 +182,12 @@ ESTILO DE RESPOSTA:
 - No final, sugere uma pergunta follow-up ou exercício
 - Seja encorajador e motivador
 
+REGRAS SOBRE MATERIAIS (OBRIGATÓRIAS):
+- PROIBIDO inventar arquivos, PDFs, links, playlists, planilhas ou pastas para download. Você NÃO consegue enviar arquivos.
+- PROIBIDO inventar nomes de arquivos (ex: apostila_conjuntos.pdf, exercicios.zip) ou links do YouTube.
+- Se o estudante pedir material ou plano de estudo, ENTREGUE o conteúdo completo direto no chat: resumo da teoria, plano organizado e exercícios de fixação com gabarito comentado no final.
+- Se citar um recurso externo, cite apenas recursos reais e conhecidos (ex: nome do livro e autor), sem inventar URL.
+
 ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + this.state.context.substring(0, 2000) + '\n--- FIM DO CONTEXTO ---' : ''}`;
     },
 
@@ -634,6 +640,33 @@ if (mobileMenuBtn) {
         navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
     });
 }
+
+// Modo tela cheia do tutor
+const expandBtn = document.getElementById('expandBtn');
+const tutorLayout = document.getElementById('tutorLayout');
+
+function setTutorFullscreen(on) {
+    if (!tutorLayout) return;
+    tutorLayout.classList.toggle('tutor-fullscreen', on);
+    document.body.classList.toggle('tutor-locked', on);
+    if (expandBtn) {
+        expandBtn.textContent = on ? '✕ Fechar' : '⛶ Tela cheia';
+        expandBtn.title = on ? 'Sair da tela cheia' : 'Abrir o tutor em tela cheia';
+    }
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+if (expandBtn) {
+    expandBtn.addEventListener('click', () => {
+        setTutorFullscreen(!tutorLayout.classList.contains('tutor-fullscreen'));
+    });
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && tutorLayout && tutorLayout.classList.contains('tutor-fullscreen')) {
+        setTutorFullscreen(false);
+    }
+});
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', (e) => {
