@@ -215,7 +215,7 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
         const exercises = this.exerciseBank[topic];
         const exercise = exercises[Math.floor(Math.random() * exercises.length)];
 
-        return `✏️ **Exercício — ${this.capitalize(topic)}**\n\n**Questão:** ${exercise.q}\n\n💭 Tenta resolver sozinho primeiro! Quando quiseres ver a resposta, diz "mostrar resposta".\n\n💡 **Dica:** ${this.getHint(topic)}`;
+        return `✏️ **Exercício — ${this.capitalize(topic)}**\n\n**Questão:** ${exercise.q}\n\n💭 Tente resolver sozinho primeiro! Quando quiser ver a resposta, diz "mostrar resposta".\n\n💡 **Dica:** ${this.getHint(topic)}`;
     },
 
     // ============================================================
@@ -254,28 +254,28 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
 
     getHint(topic) {
         const hints = {
-            'derivada': 'Lembra-te das regras: potência, produto, quociente e cadeia.',
-            'fotossintese': 'Pensa nos reagentes e produtos. A luz é necessária apenas numa das fases.',
+            'derivada': 'Lembre-se das regras: potência, produto, quociente e cadeia.',
+            'fotossintese': 'Pense nos reagentes e produtos. A luz é necessária apenas numa das fases.',
             'lei de ohm': 'Identifica o que te dão e o que te pedem. V = R × I.',
             'oferta e demanda': 'Faz um gráfico com as duas curvas. O ponto onde se cruzam é o equilíbrio.',
             'limite': 'Tenta substituir primeiro. Se der 0/0, simplifica ou usa L\'Hôpital.',
-            'matriz': 'Verifica as dimensões antes de multiplicar. O determinante só existe para matrizes quadradas.',
-            'integrais': 'Pensa qual é a função cuja derivada te dá o integrando. Não esqueças C!',
-            'logistica': 'Pensa no fluxo: como as coisas se movem do ponto A ao ponto B de forma eficiente.',
+            'matriz': 'Verifique as dimensões antes de multiplicar. O determinante só existe para matrizes quadradas.',
+            'integrais': 'Pense qual é a função cuja derivada te dá o integrando. Não esqueças C!',
+            'logistica': 'Pense no fluxo: como as coisas se movem do ponto A ao ponto B de forma eficiente.',
             'estatistica': 'Identifica primeiro o tipo de dados e depois escolhe a medida apropriada.',
-            'programacao': 'Decompõe o problema em passos pequenos e testa cada parte.',
-            'economia': 'Pensa nos incentivos: como as pessoas reagem a custos e benefícios?',
-            'quimica': 'Conta os átomos de cada lado. A equação tem de estar equilibrada.',
+            'programacao': 'Decomponha o problema em passos pequenos e testa cada parte.',
+            'economia': 'Pense nos incentivos: como as pessoas reagem a custos e benefícios?',
+            'quimica': 'Conte os átomos de cada lado. A equação tem de estar equilibrada.',
             'fisica': 'Identifica as forças envolvidas e aplica as leis de Newton.',
-            'biologia': 'Pensa na função: para que serve essa estrutura ou processo?',
-            'filosofia': 'Questiona os pressupostos. O que está a ser dado como garantido?'
+            'biologia': 'Pense na função: para que serve essa estrutura ou processo?',
+            'filosofia': 'Questione os pressupostos. O que está a ser dado como garantido?'
         };
-        return hints[topic] || 'Lê o enunciado com atenção e identifica os dados fornecidos.';
+        return hints[topic] || 'Leia o enunciado com atenção e identifica os dados fornecidos.';
     },
 
     knowledgeBase: {
         'derivada': {
-            simple: 'Uma derivada mede a **taxa de variação** de algo. Pensa num carro: o velocímetro mostra a velocidade instantânea — isso é a derivada da posição em relação ao tempo.',
+            simple: 'Uma derivada mede a **taxa de variação** de algo. Pense num carro: o velocímetro mostra a velocidade instantânea — isso é a derivada da posição em relação ao tempo.',
             analogy: 'A derivada é como o velocímetro do teu carro. O velocímetro não diz onde estás (isso é a função), mas sim a que velocidade estás a mudar de posição (isso é a derivada).',
             advanced: 'A derivada de uma função f(x) em um ponto x=a é definida como o limite: f\'(a) = lim(h→0) [f(a+h) - f(a)] / h. Geometricamente, representa a inclinação da reta tangente ao gráfico nesse ponto.',
             examples: ['Se f(x) = x², então f\'(x) = 2x. Em x=3, a taxa de variação é 6.', 'Se s(t) = 4t² + 2t (posição), então v(t) = s\'(t) = 8t + 2 (velocidade)']
@@ -288,7 +288,7 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
         },
         'lei de ohm': {
             simple: 'A Lei de Ohm diz que a **tensão** é igual à **corrente** multiplicada pela **resistência**: V = R × I.',
-            analogy: 'Pensa num tubo de água: a tensão é a pressão da água, a corrente é a quantidade de água que passa, e a resistência é o estreitamento do tubo.',
+            analogy: 'Pense num tubo de água: a tensão é a pressão da água, a corrente é a quantidade de água que passa, e a resistência é o estreitamento do tubo.',
             advanced: 'A Lei de Ohm V = R × I é válida para resistores ômicos. Em circuitos CA, generaliza-se como V = Z × I, onde Z é a impedância complexa. A potência dissipada é P = V × I = I² × R = V²/R.',
             examples: ['Se tens uma bateria de 9V e um resistor de 3Ω, a corrente é I = V/R = 9/3 = 3A.']
         },
@@ -300,19 +300,19 @@ ${this.state.context ? '\n--- CONTEXTO DOS APONTAMENTOS DO ESTUDANTE ---\n' + th
         },
         'limite': {
             simple: 'Um limite é o valor para o qual uma função **se aproxima** quando a variável se aproxima de um certo ponto.',
-            analogy: 'Pensa num gato a aproximar-se de um rato. O gato nunca chega exatamente ao rato, mas aproxima-se infinitamente. O limite é a distância mínima a que o gato chega.',
+            analogy: 'Pense num gato a aproximar-se de um rato. O gato nunca chega exatamente ao rato, mas aproxima-se infinitamente. O limite é a distância mínima a que o gato chega.',
             advanced: 'Formalmente: lim(x→a) f(x) = L significa que para todo ε > 0, existe δ > 0 tal que 0 < |x - a| < δ implica |f(x) - L| < ε.',
             examples: ['lim(x→0) sin(x)/x = 1', 'lim(x→∞) (1 + 1/x)^x = e']
         },
         'matriz': {
             simple: 'Uma **matriz** é uma tabela de números organizada em linhas e colunas.',
-            analogy: 'Pensa numa matriz como um tabuleiro de xadrez onde cada casa tem um número.',
+            analogy: 'Pense numa matriz como um tabuleiro de xadrez onde cada casa tem um número.',
             advanced: 'Uma matriz A ∈ M(m×n) é um arranjo retangular a_ij. Operações: soma, multiplicação, transposição, inversão.',
             examples: ['A matriz identidade I tem 1s na diagonal principal e 0s no resto.']
         },
         'integrais': {
             simple: 'Uma integral é como somar infinitas peças pequenas para encontrar o **total**.',
-            analogy: 'Pensa que queres saber a área de um lago irregular. Divides em faixas muito estreitas, calculas a área de cada uma e somas.',
+            analogy: 'Pense que queres saber a área de um lago irregular. Divides em faixas muito estreitas, calculas a área de cada uma e somas.',
             advanced: 'A integral definida ∫[a,b] f(x)dx é o limite de somas de Riemann. O Teorema Fundamental do Cálculo: se F\' = f, então ∫[a,b] f(x)dx = F(b) - F(a).',
             examples: ['∫ x^n dx = x^(n+1)/(n+1) + C (para n ≠ -1)']
         }
@@ -406,7 +406,7 @@ async function handleSend() {
         const exercises = ClareiaTutor.exerciseBank[topic];
         if (exercises) {
             const lastExercise = exercises[Math.floor(Math.random() * exercises.length)];
-            addMessage(`✅ **Solução:**\n\n${lastExercise.a}\n\n🎯 Compreendeste? Se tiveres dúvidas, pergunta!`, 'ai');
+            addMessage(`✅ **Solução:**\n\n${lastExercise.a}\n\n🎯 Compreendeu? Se tiveres dúvidas, pergunta!`, 'ai');
         }
     } else {
         const response = await ClareiaTutor.generateResponse(question);
@@ -440,7 +440,7 @@ chatInput.addEventListener('input', () => {
 sendBtn.addEventListener('click', handleSend);
 
 exerciseBtn.addEventListener('click', async () => {
-    addMessage('Vou gerar um exercício para praticares!', 'user');
+    addMessage('Vou gerar um exercício para praticar!', 'user');
     showTyping();
     sendBtn.disabled = true;
     await new Promise(resolve => setTimeout(resolve, 800));
@@ -489,12 +489,12 @@ function handleFile(file) {
     if (file.type === 'text/plain' || file.name.endsWith('.txt') || file.name.endsWith('.md')) {
         const reader = new FileReader();
         reader.onload = (e) => {
-            ClareiaTutor.state.context += '\n\n--- Apontamentos: ' + file.name + ' ---\n' + e.target.result.substring(0, 3000);
-            addMessage(`📄 **Ficheiro "${file.name}" carregado!** Já posso usar o conteúdo como contexto.`, 'ai');
+            ClareiaTutor.state.context += '\n\n--- Anotações: ' + file.name + ' ---\n' + e.target.result.substring(0, 3000);
+            addMessage(`📄 **Arquivo "${file.name}" carregado!** Já posso usar o conteúdo como contexto.`, 'ai');
         };
         reader.readAsText(file);
     } else {
-        addMessage(`📄 **Ficheiro "${file.name}" carregado!** Para agora, só consigo ler ficheiros de texto (.txt, .md).`, 'ai');
+        addMessage(`📄 **Arquivo "${file.name}" carregado!** Para agora, só consigo ler arquivos de texto (.txt, .md).`, 'ai');
     }
 }
 
