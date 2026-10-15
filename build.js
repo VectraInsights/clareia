@@ -30,4 +30,4 @@ const configContent = `window.CLAREIA_CONFIG = {
 
 fs.writeFileSync(path.join(distDir, 'config.js'), configContent);
 
-console.log('Build completo! config.js gerado com variáveis de ambiente.');
+console.log('Build completo! config.js gerado com variáveis de ambiente. Versão PT-BR 3.0');

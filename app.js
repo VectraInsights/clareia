@@ -158,14 +158,60 @@ ${this.state.context ? '\n--- CONTEXTO DAS ANOTAÇÕES DO ESTUDANTE ---\n' + thi
     // GERAÇÃO DE RESPOSTAS
     // ============================================================
 
+    // Correção automática de PT-PT para PT-BR
+    correctToPTBR(text) {
+        const corrections = {
+            // Pronomes e possessivos
+            'teu': 'seu', 'tua': 'sua', 'teus': 'seus', 'tuas': 'suas',
+            'ti': 'você', 'contigo': 'com você',
+            // Verbos
+            'tens': 'tem', 'tiveste': 'teve', 'gostarias': 'gostaria',
+            'és': 'é', 'estás': 'está', 'pode': 'pode', 'podes': 'pode',
+            'queres': 'quer', 'fazes': 'faz', 'dás': 'dá', 'tens': 'tem',
+            'vais': 'vai', 'tens': 'tem', 'sabes': 'sabe', 'conheces': 'conhece',
+            'tens': 'tem', 'podes': 'pode', 'queres': 'quer',
+            // Substantivos
+            'ficheiro': 'arquivo', 'ficheiros': 'arquivos',
+            'equipa': 'equipe', 'apontamentos': 'anotações',
+            'telemóvel': 'celular', 'autocarro': 'ônibus',
+            // Expressões
+            'Compreendeste': 'Compreendeu', 'compreendeste': 'compreendeu',
+            'praticares': 'praticar', 'Deres': 'Der',
+            'estás': 'está', 'estás': 'está',
+            // Palavras compostas
+            'a ser dado': 'sendo dado', 'a ser feito': 'sendo feito',
+            // Outros
+            'não és': 'não é', 'não estás': 'não está',
+            'já sabes': 'já sabe', 'já tens': 'já tem',
+            'se quiseres': 'se quiser', 'se podes': 'se pode',
+            'se fazes': 'se faz', 'se dás': 'se dá',
+            // Frases comuns
+            'Para te ajudar': 'Para ajudar',
+            'para te ajudar': 'para ajudar',
+            'ajudar-te': 'ajudar você',
+            'contigo': 'com você',
+            'ti': 'você',
+        };
+
+        let corrected = text;
+        for (const [ptpt, ptbr] of Object.entries(corrections)) {
+            const regex = new RegExp(`\\b${ptpt}\\b`, 'gi');
+            corrected = corrected.replace(regex, ptbr);
+        }
+        return corrected;
+    },
+
     async generateResponse(question) {
         const topic = this.detectTopic(question);
         if (topic) this.state.lastTopic = topic;
 
         const systemPrompt = this.buildSystemPrompt();
-        const apiResponse = await this.callAPI(question, systemPrompt);
+        let apiResponse = await this.callAPI(question, systemPrompt);
 
         if (apiResponse) {
+            // Correção automática de PT-PT para PT-BR
+            apiResponse = this.correctToPTBR(apiResponse);
+
             this.state.conversationHistory.push(
                 { role: 'user', content: question },
                 { role: 'assistant', content: apiResponse }
